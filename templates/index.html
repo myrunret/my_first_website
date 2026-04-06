@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- HERO SECTION (#1) -->
+<section class="hero" id="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Microplastics - Invisible Consequence of Plastic-Driven Society</h1>
+        <p class="hero-subtitle">
+            Dive into a journey of microplastics from production to your body.
+        </p>
+        <p class="hero-description">
+            Understand <a href="#exposure">sources</a>, 
+            <a href="#risks">health risks</a> and 
+            <a href="#action">actions</a> you can take to protect yourself today.
+        </p>
+        <div class="scroll-indicator">
+            <div class="arrow-down"></div>
+        </div>
+    </div>
+    
+    <!-- Floating plastic particles background -->
+    <div class="plastic-particles">
+        <!-- To be added via JavaScript -->
+    </div>
+</section>
+
+<!-- PLASTIC PRODUCTION (#2) -->
+<section class="fade-in-section" id="production">
+    <div class="container">
+        <h2>The Scale of Plastic Production</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">460</div>
+                <div class="stat-label">Million tons produced annually</div>
+                <p><a href="https://ourworldindata.org/grapher/global-plastics-production" class="source">Source</a></p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">/number from data/</div>
+                <div class="stat-label">x growth since 1960</div>
+            </div>
+        </div>
+        <div class="stat-container">
+            <h3>Yearly plastic consumption per person:</h3>
+            <div class="stat-number" id="plasticCounter">/number from data</div>
+            <span>kilograms</span>
+            <button>Reveal Amount</button>
+        </div>
+        <div class="recycling-quiz">
+            <h3>Guess what percentage of plastic waste is recycled worldwide?</h3>
+            <div class="pie-chart-container">
+                <canvas id="recyclingChart"></canvas>
+                <button class="reveal-btn">
+                    Click to Reveal
+                </button>
+            </div>
+            <div class="reveal-text" id="revealText">
+                <span class="shocking-stat">Only 9%</span>
+                <p>The rest ends up in landfills, oceans, or is incinerated</p>
+                <p><a href="https://ourworldindata.org/grapher/share-plastic-fate" class="source">Source</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div id="background">
+
+<!-- ENVIRONMENTAL DAMAGE (#3) -->
+<section class="fade-in-section" id="environment">
+    <div class="container">
+        <h2>Environmental Damage: Threat to Marine Ecosystems</h2>
+        <div>
+            <p>
+                When talking about plastic pollution, you may imagine piles of identifiable plastic objects floating around the ocean.
+            </p>
+            <p>But it turns out to be just the tip of the iceberg.</p>
+        </div>
+    </div>
+</section>
+
+<!-- DEGRADATION (#3.1) -->
+<section class="fade-in-section" id="degradation">
+    <div class="container">
+        <h2>The Slow Breakdown</h2>
+        
+        <div class="timeline-container">
+            <div class="degradation-timeline">
+                <div class="timeline-item">
+                    <span class="year">450+</span>
+                    <span class="label">Years to degrade</span>
+                </div>
+            </div>
+            <div class="plastic-bottle">
+                <img src="bottle.png" alt="Click me">
+                <p>Click to see breakdown</p>
+                <!-- To be added with JavaScript -->
+            </div>
+            <div id="particles-container"></div>
+            <p class="degradation-text">
+                As plastic-containing products degrade under sunlight and friction, 
+                they release toxic chemicals into soil and water.
+            </p>
+            <div class="impact-stats">
+                <p>It harms whole ecosystems, especially in marine environments.</p>
+                <div class="species-counter">
+                    <span class="number">800+</span>
+                    <span class="text">species impacted by plastic litter</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- UNDERWATER VIEW (#3.2) -->
+<section class="fade-in-section" id="underwater">
+    <div class="container">
+        <div class="size-comparison">
+            <h3>How small are microplastics?</h3>
+            <div class="size-slider">
+                <input type="range" min="1" max="3" value="1" id="sizeRange">
+            </div>
+            <div class="comparison-visual">
+                <div class="object" id="comparisonObject">
+                    <img src="" id="objectImage">
+                    <p id="objectLabel"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ENVIRONMENTAL DAMAGE (#4) -->
+
+
+</div>
+
+<!-- HUMAN HEALTH CONNECTION (#5) -->
+<section class="fade-in-section" id="health">
+    <div class="container">
+        <div class="human-impact">
+            <h3>The Human Connection</h3>
+            <div class="organ-visualization">
+                <p>Microplastics have been found in human:</p>
+                <div class="organs-grid">
+                    <div class="organ" data-organ="brain">Brain</div>
+                    <div class="organ" data-organ="lungs">Lungs</div>
+                    <div class="organ" data-organ="liver">Liver</div>
+                    <div class="organ" data-organ="placenta">Placenta</div>
+                </div>
+            </div>
+            <p class="daily-intake">
+                Estimated daily intake: <span class="highlight">5 grams per week</span>
+                <br><small>Equivalent to a credit card</small>
+            </p>
+        </div>
+    </div>
+</section>
+
+
+<!-- EXPOSURE PATHWAYS (#6) -->
+<section class="fade-in-section" id="exposure">
+    <div class="container">
+        <h2>How Do They Get There?</h2>
+        <p class="intro">
+            Microplastics can further break down to nanoplastics - particles smaller than 1 micrometre, fully invisible to us.
+        </p>
+        
+        <div class="exposure-cards">
+            <div class="exposure-card water">
+                <div class="icon">💧</div>
+                <h3>Water</h3>
+                <div class="stat">/number from data/</div>
+                <p>Microplatic particles are found in tap water, bottled water, and groundwater worldwide</p>
+            </div>
+            
+            <div class="exposure-card food">
+                <div class="icon">🐟</div>
+                <h3>Food</h3>
+                <div class="stat">90% of seafood contaminated</div>
+                <p>Marine plastic pollution affects most seafood we consume</p>
+            </div>
+            
+            <div class="exposure-card clothing">
+                <div class="icon">👕</div>
+                <h3>Clothing</h3>
+                <div class="stat">700,000 fibers per wash</div>
+                <p>Synthetic clothing releases microfibers with every wash</p>
+            </div>
+            
+            <div class="exposure-card air">
+                <div class="icon">💨</div>
+                <h3>Air</h3>
+                <div class="stat">1,000+ particles daily</div>
+                <p>From tires, city dust, and textile fibers in indoor air</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SCIENTIFIC VIEW (#7) -->
+<section class="fade-in-section" id="risks">
+    <div class="container">
+        <h2>Scientific View on Health Risks</h2>
+        <div class="research-challenges">
+            <h3>Research Challenges</h3>
+            <div class="challenge-cards">
+                <div class="challenge">
+                    <p>Since 1950s, plastic pollution scaled massively, leaving no control group without exposure</p>
+                </div>
+                <div class="challenge">
+                    <p>Nanoplastics can enter cells, disrupting cellular activity, but are too small to easily detect</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="research-status">
+            <p class="disclaimer">
+                While causality is still being established, preliminary research suggests links to:
+            </p>
+            <ul class="potential-risks">
+                <li>Inflammation and oxidative stress</li>
+                <li>Endocrine disruption</li>
+                <li>Cellular damage</li>
+                <li>Bioaccumulation in organs</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- CALL TO ACTION (#8) -->
+<section class="fade-in-section" id="action">
+    <div class="container">
+        <h3>Ready to make a difference?</h3>
+        <a href="/action">Start Your Plastic-Free Journey</a>
+    </div>
+</section>
+{% endblock %}
