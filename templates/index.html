@@ -1,238 +1,434 @@
 {% extends "base.html" %}
 
+{% block title %}Microplastics — Invisible Threat{% endblock %}
+
 {% block content %}
-<!-- HERO SECTION (#1) -->
+
+<div class="hero-stack">
 <section class="hero" id="hero">
-    <div class="hero-content">
-        <h1 class="hero-title">Microplastics - Invisible Consequence of Plastic-Driven Society</h1>
-        <p class="hero-subtitle">
-            Dive into a journey of microplastics from production to your body.
-        </p>
-        <p class="hero-description">
-            Understand <a href="#exposure">sources</a>, 
-            <a href="#risks">health risks</a> and 
-            <a href="#action">actions</a> you can take to protect yourself today.
-        </p>
-        <div class="scroll-indicator">
-            <div class="arrow-down"></div>
-        </div>
+  <div class="hero-bg-gradient"></div>
+  <div class="hero-particles" aria-hidden="true">
+    <span class="hp hp-1"></span><span class="hp hp-2"></span>
+    <span class="hp hp-3"></span><span class="hp hp-4"></span>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">The invisible crisis</p>
+    <h1 class="hero-title">Microplastics<br><em>are already inside you.</em></h1>
+    <p class="hero-subtitle">
+      Dive into the journey of plastic — from factory floors to your bloodstream.
+    </p>
+    <p class="hero-nav-hint">
+      Understand <a href="#exposure">how you're exposed</a>,
+      explore <a href="#risks">what the science says</a>,
+      and discover <a href="#pledge">what you can do</a>.
+    </p>
+    <div class="scroll-cue" aria-label="Scroll down">
+      <span class="scroll-cue-line"></span>
+      <span class="scroll-cue-dot"></span>
     </div>
-    
-    <!-- Floating plastic particles background -->
-    <div class="plastic-particles">
-        <!-- To be added via JavaScript -->
-    </div>
+  </div>
 </section>
 
-<!-- PLASTIC PRODUCTION (#2) -->
 <section class="fade-in-section" id="production">
-    <div class="container">
-        <h2>The Scale of Plastic Production</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">460</div>
-                <div class="stat-label">Million tons produced annually</div>
-                <p><a href="https://ourworldindata.org/grapher/global-plastics-production" class="source">Source</a></p>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">/number from data/</div>
-                <div class="stat-label">x growth since 1960</div>
-            </div>
+  <div class="container production-layout">
+
+    <!-- Main content column -->
+    <div class="production-main">
+      <h2>The Scale of Plastic Production</h2>
+      <p class="section-intro">
+        Since the 1950s, humanity has produced more plastic than any other material in history.
+        The numbers are almost impossible to comprehend.
+      </p>
+
+      <div class="stats-grid">
+        <div class="stat-card stat-card--danger">
+          <div class="stat-card-value">{{ latest['annual_value'] | thousands }}</div>
+          <div class="stat-card-label">tonnes produced this year alone</div>
+          <p class="source-tag">{{ latest['source'] }}</p>
         </div>
-        <div class="stat-container">
-            <h3>Yearly plastic consumption per person:</h3>
-            <div class="stat-number" id="plasticCounter">/number from data</div>
-            <span>kilograms</span>
-            <button>Reveal Amount</button>
+        <div class="stat-card stat-card--warn">
+          <div class="stat-card-value">{{ growth }}×</div>
+          <div class="stat-card-label">more plastic than in 1950</div>
         </div>
-        <div class="recycling-quiz">
-            <h3>Guess what percentage of plastic waste is recycled worldwide?</h3>
-            <div class="pie-chart-container">
-                <canvas id="recyclingChart"></canvas>
-                <button class="reveal-btn">
-                    Click to Reveal
-                </button>
+      </div>
+
+      <!-- Recycling pie chart guesser -->
+      <div class="quiz-card">
+        <h3>What share of all plastic waste is recycled?</h3>
+        <p class="quiz-subtext">Drag to place your guess, then reveal the answer.</p>
+
+        <div class="quiz-arena">
+          <div class="chart-wrap">
+            <canvas id="recyclingChart" width="240" height="240"></canvas>
+            <div class="chart-center-label" id="chartCenterLabel">?</div>
+          </div>
+
+          <div class="quiz-controls">
+            <div class="guess-display">
+              Your guess: <span id="guessValue">50</span>%
             </div>
-            <div class="reveal-text" id="revealText">
-                <span class="shocking-stat">Only 9%</span>
-                <p>The rest ends up in landfills, oceans, or is incinerated</p>
-                <p><a href="https://ourworldindata.org/grapher/share-plastic-fate" class="source">Source</a></p>
+            <input type="range" min="1" max="99" value="50"
+                   id="recyclingSlider" class="quiz-slider">
+            <div class="slider-labels">
+              <span>1%</span><span>50%</span><span>99%</span>
             </div>
+            <button class="btn-reveal" id="recyclingRevealBtn">
+              Reveal the truth →
+            </button>
+          </div>
         </div>
+
+        <div class="reveal-panel" id="revealPanel">
+          <div class="reveal-headline">
+            <span class="reveal-number">9%</span>
+            <span class="reveal-copy">of all plastic ever produced has been recycled.</span>
+          </div>
+          <div class="fate-list">
+            <div class="fate-item">
+              <span class="fate-dot fate-dot--green"></span>9% — Recycled
+            </div>
+            <div class="fate-item">
+              <span class="fate-dot fate-dot--orange"></span>12% — Incinerated
+            </div>
+            <div class="fate-item">
+              <span class="fate-dot fate-dot--red"></span>79% — Landfill, ocean, environment
+            </div>
+          </div>
+          <p class="source-tag">
+            <a href="https://ourworldindata.org/grapher/share-plastic-fate" target="_blank">
+              Our World in Data
+            </a>
+          </p>
+        </div>
+      </div>
     </div>
+
+    <!-- Right sticky timeline -->
+    <aside class="timeline-sticky" aria-label="Production timeline">
+      <p class="timeline-label">Global production</p>
+      <div class="timeline-year" id="timelineYear">{{ plastic_by_year[0]['year'] }}</div>
+      <div class="timeline-amount">
+        <span id="timelineValue">—</span>
+        <small>tonnes / year</small>
+      </div>
+      <div class="timeline-bar-track">
+        <div class="timeline-bar-fill" id="timelineBarFill"></div>
+      </div>
+      <div class="timeline-ticks">
+        {% for row in plastic_by_year %}
+          {% if row['year'] % 10 == 0 %}
+          <div class="tick-item" data-year="{{ row['year'] }}">
+            <span>{{ row['year'] }}</span>
+            <span>{{ "{:,.0f}".format(row['value']) }}</span>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </aside>
+
+  </div>
 </section>
 
 
-<div id="background">
-
-<!-- ENVIRONMENTAL DAMAGE (#3) -->
-<section class="fade-in-section" id="environment">
-    <div class="container">
-        <h2>Environmental Damage: Threat to Marine Ecosystems</h2>
-        <div>
-            <p>
-                When talking about plastic pollution, you may imagine piles of identifiable plastic objects floating around the ocean.
-            </p>
-            <p>But it turns out to be just the tip of the iceberg.</p>
-        </div>
+<section class="fade-in-section section-dark" id="environment">
+  <div class="container container--narrow">
+    <h2>The Ocean Pays First</h2>
+    <p>
+      You might picture plastic pollution as visible bottles and bags floating at the surface.
+      That's just the beginning.
+    </p>
+    <p>
+      Under relentless UV light and friction, every piece of plastic slowly fractures —
+      shedding particles that sink, disperse, and enter the food chain invisibly.
+    </p>
+    <p class="section-aside">
+      Estimates of affected species vary by study and definition of harm; the headline figure below
+      illustrates the breadth of ecological contact, not a precise census.
+    </p>
+    <div class="iceberg-stat">
+      <span class="iceberg-number">800<span class="iceberg-plus">+</span></span>
+      <span class="iceberg-text">marine species affected by plastic litter</span>
     </div>
-</section>
-
-<!-- DEGRADATION (#3.1) -->
-<section class="fade-in-section" id="degradation">
-    <div class="container">
-        <h2>The Slow Breakdown</h2>
-        
-        <div class="timeline-container">
-            <div class="degradation-timeline">
-                <div class="timeline-item">
-                    <span class="year">450+</span>
-                    <span class="label">Years to degrade</span>
-                </div>
-            </div>
-            <div class="plastic-bottle">
-                <img src="bottle.png" alt="Click me">
-                <p>Click to see breakdown</p>
-                <!-- To be added with JavaScript -->
-            </div>
-            <div id="particles-container"></div>
-            <p class="degradation-text">
-                As plastic-containing products degrade under sunlight and friction, 
-                they release toxic chemicals into soil and water.
-            </p>
-            <div class="impact-stats">
-                <p>It harms whole ecosystems, especially in marine environments.</p>
-                <div class="species-counter">
-                    <span class="number">800+</span>
-                    <span class="text">species impacted by plastic litter</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- UNDERWATER VIEW (#3.2) -->
-<section class="fade-in-section" id="underwater">
-    <div class="container">
-        <div class="size-comparison">
-            <h3>How small are microplastics?</h3>
-            <div class="size-slider">
-                <input type="range" min="1" max="3" value="1" id="sizeRange">
-            </div>
-            <div class="comparison-visual">
-                <div class="object" id="comparisonObject">
-                    <img src="" id="objectImage">
-                    <p id="objectLabel"></p>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 </section>
 
 
-<!-- ENVIRONMENTAL DAMAGE (#4) -->
+<section class="fade-in-section section-breakdown" id="degradation">
+  <div class="breakdown-float-layer" aria-hidden="true">
+    <div class="float-item macro" style="--x:8%;  --delay:0s;   --dur:14s; --size:54px">🧴</div>
+    <div class="float-item macro" style="--x:35%; --delay:1s;   --dur:17s; --size:42px">🛍️</div>
+    <div class="float-item macro" style="--x:62%; --delay:2.5s; --dur:16s; --size:40px">🥤</div>
+    <div class="float-item macro" style="--x:88%; --delay:0.5s; --dur:18s; --size:46px">🍶</div>
+    <div class="float-item micro" style="--x:18%; --delay:1s;   --dur:11s"></div>
+    <div class="float-item micro" style="--x:48%; --delay:0s;   --dur:10s"></div>
+    <div class="float-item micro" style="--x:78%; --delay:3s;   --dur:12s"></div>
+  </div>
+
+  <div class="container container--narrow breakdown-content">
+    <div class="degradation-badge">
+      <span class="deg-years">450+</span>
+      <span class="deg-label">years to degrade</span>
+    </div>
+
+    <h2>The Slow Breakdown</h2>
+    <p>
+      A single plastic bottle discarded today will outlive everyone alive on Earth.
+      As it degrades, it doesn't disappear — it multiplies into millions of invisible fragments.
+    </p>
+
+    <!-- Size comparison slider -->
+    <div class="size-comparison">
+      <h3>How small is a microplastic?</h3>
+      <div class="size-stages">
+        <div class="size-stage active" data-stage="0">
+          <div class="size-visual size-bottle">🍶</div>
+          <div class="size-name">Plastic bottle</div>
+          <div class="size-dim">~20 cm</div>
+        </div>
+        <div class="size-arrow">→</div>
+        <div class="size-stage" data-stage="1">
+          <div class="size-visual size-fragment">▪</div>
+          <div class="size-name">Macroplastic fragment</div>
+          <div class="size-dim">~5 mm</div>
+        </div>
+        <div class="size-arrow">→</div>
+        <div class="size-stage" data-stage="2">
+          <div class="size-visual size-micro">·</div>
+          <div class="size-name">Microplastic</div>
+          <div class="size-dim">&lt; 5 mm → 1 µm</div>
+        </div>
+        <div class="size-arrow">→</div>
+        <div class="size-stage" data-stage="3">
+          <div class="size-visual size-nano"></div>
+          <div class="size-name">Nanoplastic</div>
+          <div class="size-dim">&lt; 1 µm — enters cells</div>
+        </div>
+      </div>
+      <input type="range" min="0" max="3" value="0" id="sizeRange" class="quiz-slider size-slider-input">
+    </div>
+  </div>
+</section>
 
 
-</div>
-
-<!-- HUMAN HEALTH CONNECTION (#5) -->
 <section class="fade-in-section" id="health">
-    <div class="container">
-        <div class="human-impact">
-            <h3>The Human Connection</h3>
-            <div class="organ-visualization">
-                <p>Microplastics have been found in human:</p>
-                <div class="organs-grid">
-                    <div class="organ" data-organ="brain">Brain</div>
-                    <div class="organ" data-organ="lungs">Lungs</div>
-                    <div class="organ" data-organ="liver">Liver</div>
-                    <div class="organ" data-organ="placenta">Placenta</div>
-                </div>
-            </div>
-            <p class="daily-intake">
-                Estimated daily intake: <span class="highlight">5 grams per week</span>
-                <br><small>Equivalent to a credit card</small>
-            </p>
-        </div>
+  <div class="container container--narrow">
+    <h2>It's Already Inside You</h2>
+    <p class="section-intro">
+      Microplastics have been detected in human tissue in peer-reviewed studies.
+      Not traces — measurable concentrations.
+    </p>
+    <p class="section-aside">Open a card for a plain-language note. Detection does not by itself prove disease risk.</p>
+
+    <div class="organs-grid">
+      <details class="organ-card">
+        <summary class="organ-summary">
+          <span class="organ-icon" aria-hidden="true">🧠</span>
+          <span class="organ-name">Brain</span>
+          <span class="organ-year">2024</span>
+        </summary>
+        <p class="organ-detail">Recent reports describe microplastic-like particles in autopsy and surgical samples; debate continues over contamination control during analysis.</p>
+      </details>
+      <details class="organ-card">
+        <summary class="organ-summary">
+          <span class="organ-icon" aria-hidden="true">🫁</span>
+          <span class="organ-name">Lungs</span>
+          <span class="organ-year">2022</span>
+        </summary>
+        <p class="organ-detail">Inhaled fibres can lodge deep in lung tissue; occupational and urban air studies show persistent synthetic particles.</p>
+      </details>
+      <details class="organ-card">
+        <summary class="organ-summary">
+          <span class="organ-icon" aria-hidden="true">❤️</span>
+          <span class="organ-name">Heart</span>
+          <span class="organ-year">2023</span>
+        </summary>
+        <p class="organ-detail">Cardiovascular tissues have been examined for polymer-associated pigments and particles; clinical significance is an active research area.</p>
+      </details>
+      <details class="organ-card">
+        <summary class="organ-summary">
+          <span class="organ-icon" aria-hidden="true">🩸</span>
+          <span class="organ-name">Blood</span>
+          <span class="organ-year">2022</span>
+        </summary>
+        <p class="organ-detail">Circulating fragments imply systemic transport; quantification methods and particle identities still vary between labs.</p>
+      </details>
+      <details class="organ-card">
+        <summary class="organ-summary">
+          <span class="organ-icon" aria-hidden="true">🫀</span>
+          <span class="organ-name">Liver</span>
+          <span class="organ-year">2021</span>
+        </summary>
+        <p class="organ-detail">The liver filters bloodborne material; studies report polymer fragments and additives in post-mortem and biopsy contexts.</p>
+      </details>
+      <details class="organ-card">
+        <summary class="organ-summary">
+          <span class="organ-icon" aria-hidden="true">🤱</span>
+          <span class="organ-name">Placenta</span>
+          <span class="organ-year">2020</span>
+        </summary>
+        <p class="organ-detail">Particles near the maternal–fetal interface raise questions about developmental exposure; evidence is evolving and method-sensitive.</p>
+      </details>
     </div>
+
+    <div class="credit-card-stat">
+      <div class="cc-amount">5g</div>
+      <div class="cc-text">
+        estimated weekly intake per person —
+        <strong>the weight of a credit card</strong>
+      </div>
+    </div>
+  </div>
 </section>
 
 
-<!-- EXPOSURE PATHWAYS (#6) -->
-<section class="fade-in-section" id="exposure">
-    <div class="container">
-        <h2>How Do They Get There?</h2>
-        <p class="intro">
-            Microplastics can further break down to nanoplastics - particles smaller than 1 micrometre, fully invisible to us.
-        </p>
-        
-        <div class="exposure-cards">
-            <div class="exposure-card water">
-                <div class="icon">💧</div>
-                <h3>Water</h3>
-                <div class="stat">/number from data/</div>
-                <p>Microplatic particles are found in tap water, bottled water, and groundwater worldwide</p>
-            </div>
-            
-            <div class="exposure-card food">
-                <div class="icon">🐟</div>
-                <h3>Food</h3>
-                <div class="stat">90% of seafood contaminated</div>
-                <p>Marine plastic pollution affects most seafood we consume</p>
-            </div>
-            
-            <div class="exposure-card clothing">
-                <div class="icon">👕</div>
-                <h3>Clothing</h3>
-                <div class="stat">700,000 fibers per wash</div>
-                <p>Synthetic clothing releases microfibers with every wash</p>
-            </div>
-            
-            <div class="exposure-card air">
-                <div class="icon">💨</div>
-                <h3>Air</h3>
-                <div class="stat">1,000+ particles daily</div>
-                <p>From tires, city dust, and textile fibers in indoor air</p>
-            </div>
-        </div>
+<section class="fade-in-section section-dark" id="exposure">
+  <div class="container">
+    <h2>How Do They Get There?</h2>
+    <p class="section-intro">
+      Microplastics enter the body through every route imaginable —
+      what you drink, eat, breathe, and wear.
+    </p>
+
+    <div class="exposure-grid">
+      <div class="exposure-card">
+        <div class="exposure-icon">💧</div>
+        <h3>Water</h3>
+        <div class="exposure-stat">83%</div>
+        <p>of tap water samples worldwide contain microplastic fibres</p>
+      </div>
+      <div class="exposure-card">
+        <div class="exposure-icon">🐟</div>
+        <h3>Food</h3>
+        <div class="exposure-stat">90%</div>
+        <p>of commercial seafood contains microplastic contamination</p>
+      </div>
+      <div class="exposure-card">
+        <div class="exposure-icon">👕</div>
+        <h3>Clothing</h3>
+        <div class="exposure-stat">700K</div>
+        <p>synthetic fibres released per wash cycle into wastewater</p>
+      </div>
+      <div class="exposure-card">
+        <div class="exposure-icon">💨</div>
+        <h3>Air</h3>
+        <div class="exposure-stat">1,000+</div>
+        <p>particles inhaled or ingested per person per day indoors</p>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- SCIENTIFIC VIEW (#7) -->
+
 <section class="fade-in-section" id="risks">
-    <div class="container">
-        <h2>Scientific View on Health Risks</h2>
-        <div class="research-challenges">
-            <h3>Research Challenges</h3>
-            <div class="challenge-cards">
-                <div class="challenge">
-                    <p>Since 1950s, plastic pollution scaled massively, leaving no control group without exposure</p>
-                </div>
-                <div class="challenge">
-                    <p>Nanoplastics can enter cells, disrupting cellular activity, but are too small to easily detect</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="research-status">
-            <p class="disclaimer">
-                While causality is still being established, preliminary research suggests links to:
-            </p>
-            <ul class="potential-risks">
-                <li>Inflammation and oxidative stress</li>
-                <li>Endocrine disruption</li>
-                <li>Cellular damage</li>
-                <li>Bioaccumulation in organs</li>
-            </ul>
-        </div>
+  <div class="container container--narrow">
+    <h2>What the Science Says</h2>
+
+    <div class="research-note">
+      <p>
+        Causality is still being established — no control group of unexposed humans exists.
+        But preliminary evidence is consistent across independent research groups.
+      </p>
     </div>
+
+    <div class="evidence-list">
+      <div class="evidence-item">
+        <div class="evidence-bar-wrap">
+          <div class="evidence-bar" style="--fill: 78%"></div>
+        </div>
+        <div class="evidence-text">
+          <strong>Inflammation &amp; oxidative stress</strong>
+          <span class="evidence-strength">Strong preliminary evidence</span>
+          <details class="evidence-more">
+            <summary>Context</summary>
+            <p>Cell and animal models often show immune activation when exposed to relevant doses; human translation is incomplete.</p>
+          </details>
+        </div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-bar-wrap">
+          <div class="evidence-bar" style="--fill: 65%"></div>
+        </div>
+        <div class="evidence-text">
+          <strong>Endocrine disruption</strong>
+          <span class="evidence-strength">Moderate evidence</span>
+          <details class="evidence-more">
+            <summary>Context</summary>
+            <p>Plastics carry plasticisers and other additives that can interfere with hormone signalling in controlled experiments.</p>
+          </details>
+        </div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-bar-wrap">
+          <div class="evidence-bar" style="--fill: 70%"></div>
+        </div>
+        <div class="evidence-text">
+          <strong>Cellular damage &amp; bioaccumulation</strong>
+          <span class="evidence-strength">Moderate–strong evidence</span>
+          <details class="evidence-more">
+            <summary>Context</summary>
+            <p>Particles below certain sizes can be internalised by cells; persistence and dose–response in people remain open questions.</p>
+          </details>
+        </div>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-bar-wrap">
+          <div class="evidence-bar" style="--fill: 45%"></div>
+        </div>
+        <div class="evidence-text">
+          <strong>Cardiovascular disease link</strong>
+          <span class="evidence-strength">Emerging evidence (2024)</span>
+          <details class="evidence-more">
+            <summary>Context</summary>
+            <p>Some observational work links detected particles with plaque characteristics; confounding and causation are not settled.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- CALL TO ACTION (#8) -->
-<section class="fade-in-section" id="action">
-    <div class="container">
-        <h3>Ready to make a difference?</h3>
-        <a href="/action">Start Your Plastic-Free Journey</a>
+<section class="fade-in-section section-pledge" id="pledge">
+  <div class="container container--narrow">
+    <h2>Make it personal.</h2>
+    <p class="pledge-intro">
+      Knowledge without action is just anxiety. Take one step right now.
+    </p>
+
+    <div class="pledge-box" id="pledgeBox">
+      <p class="pledge-prompt">My name is</p>
+      <input
+        type="text"
+        id="pledgeName"
+        class="pledge-input"
+        placeholder="your name"
+        maxlength="40"
+        autocomplete="off"
+      >
+      <p class="pledge-prompt">and I'm committing to reduce my plastic use starting today.</p>
+      <button class="btn-pledge" id="pledgeBtn" disabled>
+        Make the pledge
+      </button>
     </div>
+
+    <div class="pledge-success" id="pledgeSuccess">
+      <div class="pledge-card" id="pledgeCard">
+        <p class="pledge-card-eyebrow">pledged</p>
+        <p class="pledge-card-name" id="pledgeCardName"></p>
+        <p class="pledge-card-text">is reducing plastic starting today.</p>
+        <p class="pledge-card-date" id="pledgeCardDate"></p>
+      </div>
+      <p class="pledge-counter">
+        You've joined <strong id="pledgeCount">—</strong> others who pledged.
+      </p>
+      <a href="/action" class="btn-action">See how to start →</a>
+    </div>
+  </div>
 </section>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    window.plasticData =  {{ plastic_by_year | tojson }};
+    </script>
 {% endblock %}
