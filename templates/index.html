@@ -20,7 +20,7 @@
     <p class="hero-nav-hint">
       Understand <a href="#exposure">how you're exposed</a>,
       explore <a href="#risks">what the science says</a>,
-      and discover <a href="#pledge">what you can do</a>.
+      then <a href="{{ url_for('action') }}#pledge">take action</a> on the action page.
     </p>
     <div class="scroll-cue" aria-label="Scroll down">
       <span class="scroll-cue-line"></span>
@@ -28,6 +28,7 @@
     </div>
   </div>
 </section>
+</div>
 
 <section class="fade-in-section" id="production">
   <div class="container production-layout">
@@ -383,44 +384,6 @@
           </details>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<section class="fade-in-section section-pledge" id="pledge">
-  <div class="container container--narrow">
-    <h2>Make it personal.</h2>
-    <p class="pledge-intro">
-      Knowledge without action is just anxiety. Take one step right now.
-    </p>
-
-    <div class="pledge-box" id="pledgeBox">
-      <p class="pledge-prompt">My name is</p>
-      <input
-        type="text"
-        id="pledgeName"
-        class="pledge-input"
-        placeholder="your name"
-        maxlength="40"
-        autocomplete="off"
-      >
-      <p class="pledge-prompt">and I'm committing to reduce my plastic use starting today.</p>
-      <button class="btn-pledge" id="pledgeBtn" disabled>
-        Make the pledge
-      </button>
-    </div>
-
-    <div class="pledge-success" id="pledgeSuccess">
-      <div class="pledge-card" id="pledgeCard">
-        <p class="pledge-card-eyebrow">pledged</p>
-        <p class="pledge-card-name" id="pledgeCardName"></p>
-        <p class="pledge-card-text">is reducing plastic starting today.</p>
-        <p class="pledge-card-date" id="pledgeCardDate"></p>
-      </div>
-      <p class="pledge-counter">
-        You've joined <strong id="pledgeCount">—</strong> others who pledged.
-      </p>
-      <a href="/action" class="btn-action">See how to start →</a>
     </div>
   </div>
 </section>

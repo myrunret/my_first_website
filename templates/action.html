@@ -1,65 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Micro-action{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <div class="progress-bar" id="progressBar"></div>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/sources">Data</a></li>
-            <li><a href="/contact">Contact</a></li>
-        </ul>
-    </nav>
-    <main>
-        <h1>Here you can discover ways in which you can contribute to plastic reduction</h1>
-        <h2>Take Action Today</h2>
-            
-            <div class="action-intro">
-                <p>Solutions for reducing your plastic exposure and environmental impact</p>
-            </div>
-            
-            <div class="action-grid">
-                <div class="action-card">
-                    <h3>Reduce Consumption</h3>
-                    <ul>
-                        <li>Choose reusable alternatives</li>
-                        <li>Buy in bulk</li>
-                        <li>Avoid single-use plastics</li>
-                    </ul>
-                </div>
-                
-                <div class="action-card">
-                    <h3>Make Sustainable Choices</h3>
-                    <ul>
-                        <li>Natural fiber clothing</li>
-                        <li>Glass or metal containers</li>
-                        <li>Support plastic-free brands</li>
-                    </ul>
-                </div>
-                
-                <div class="action-card">
-                    <h3>Spread Awareness</h3>
-                    <ul>
-                        <li>Share this information</li>
-                        <li>Join local initiatives</li>
-                        <li>Vote with your wallet</li>
-                    </ul>
-                </div>
-            </div>
-    </main>
-    <footer>
-        <h3>Thank you for visiting this website.</h3>
-        <h3>Let's create a sustainable future together.</h3>
-        <p><a href="/tech">Learn about technology stack utilized for this website</a></p>
-        <p><a href="/contact">Contact author of the website</a></p>
-    </footer>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+{% extends "base.html" %}
 
-   
+{% block title %}Take action — Micro-acting{% endblock %}
+
+{% block content %}
+<div class="action-page">
+  <header class="action-page-hero" id="action-tips">
+    <div class="container container--narrow action-page-header">
+      <p class="hero-eyebrow action-eyebrow">What you can do</p>
+      <h1 class="action-page-title">Reduce plastic<br><em>in everyday life</em></h1>
+      <p class="action-page-lead">
+        Practical swaps and habits that lower your footprint and often your exposure too.
+      </p>
+    </div>
+  </header>
+
+  <section class="fade-in-section action-tips-section">
+    <div class="container">
+      <h2>Start with one change</h2>
+      <p class="section-intro">
+        You do not need to overhaul your life overnight. Pick one column that fits your routine, then add another when it sticks.
+      </p>
+
+      <div class="action-grid">
+        <article class="action-card">
+          <h3>Reduce consumption</h3>
+          <ul>
+            <li>Choose reusables for drinks, bags, and food containers</li>
+            <li>Buy in bulk where it cuts packaging per serving</li>
+            <li>Skip single-use cutlery, straws, and mini toiletries</li>
+          </ul>
+        </article>
+
+        <article class="action-card">
+          <h3>Sustainable choices</h3>
+          <ul>
+            <li>Favour natural fibres to cut microfibre shedding from laundry</li>
+            <li>Use glass or metal for storage and cooking when practical</li>
+            <li>Support brands that publish packaging and reduction targets</li>
+          </ul>
+        </article>
+
+        <article class="action-card">
+          <h3>Spread awareness</h3>
+          <ul>
+            <li>Share reliable sources with friends and colleagues</li>
+            <li>Join clean-ups or local plastic-reduction initiatives</li>
+            <li>Vote with your wallet and ask retailers for better options</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade-in-section section-pledge" id="pledge">
+    <div class="container container--narrow">
+      <h2>Make it personal.</h2>
+      <p class="pledge-intro">
+        Knowledge without action is just anxiety. After the ideas above, lock in one public commitment.
+      </p>
+
+      <div class="pledge-box" id="pledgeBox">
+        <p class="pledge-prompt">My name is</p>
+        <input
+          type="text"
+          id="pledgeName"
+          class="pledge-input"
+          placeholder="your name"
+          maxlength="40"
+          autocomplete="off"
+        >
+        <p class="pledge-prompt">and I'm committing to reduce my plastic use starting today.</p>
+        <button type="button" class="btn-pledge" id="pledgeBtn" disabled>
+          Make the pledge
+        </button>
+      </div>
+
+      <div class="pledge-success" id="pledgeSuccess">
+        <div class="pledge-card" id="pledgeCard">
+          <p class="pledge-card-eyebrow">pledged</p>
+          <p class="pledge-card-name" id="pledgeCardName"></p>
+          <p class="pledge-card-text">is reducing plastic starting today.</p>
+          <p class="pledge-card-date" id="pledgeCardDate"></p>
+        </div>
+        <p class="pledge-counter">
+          You've joined <strong id="pledgeCount">—</strong> others who pledged.
+        </p>
+        <a href="#action-tips" class="btn-action">Review tips above ↑</a>
+        <a href="{{ url_for('home') }}" class="btn-action btn-action--ghost">Back to the story →</a>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

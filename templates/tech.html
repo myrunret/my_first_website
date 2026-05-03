@@ -1,16 +1,72 @@
 {% extends "base.html" %}
 
-{% block title %}About - My Website{% endblock %}
+{% block title %}Tech stack — Micro-acting{% endblock %}
 
 {% block content %}
-    <h1>About This Website</h1>
-    <h2>Our purpose</h2>
-    <h2>Data ethics</h2>
-    <h3>User tracking</h3>
-    <h3>Data analysis</h3>
-    <h2>Web Development and Tech Stack</h2>
-    <p>HTML & CSS</p>
-    <p>JavaScript</p>
-    <p>Python Flask</p>
-    <p>AI</p>
+<div class="support-page">
+  <header class="action-page-hero">
+    <div class="container container--narrow">
+      <p class="hero-eyebrow action-eyebrow">Under the hood</p>
+      <h1 class="action-page-title">How this site is built</h1>
+      <p class="action-page-lead">
+        A small Flask app with static front-end assets — fast to host, easy to audit, and readable without a heavy JavaScript framework.
+      </p>
+    </div>
+  </header>
+
+  <div class="support-page-body">
+    <div class="container container--narrow">
+      <section class="support-section" id="purpose" aria-labelledby="purpose-h">
+        <h2 id="purpose-h">Purpose</h2>
+        <p>
+          This project combines narrative scrolling, a little data visualisation, and clear sourcing so visitors can move
+          from awareness to action. The stack is intentionally boring: fewer moving parts means fewer surprises in deployment or coursework demos.
+        </p>
+      </section>
+
+      <section class="support-section" id="ethics" aria-labelledby="ethics-h">
+        <h2 id="ethics-h">Data &amp; privacy</h2>
+        <p>
+          Production numbers are served from a local SQLite database checked into the repo for reproducibility.
+          The pledge on the <a href="{{ url_for('action') }}">action</a> page is stored in your browser only (<code class="source-code">localStorage</code>) unless you later wire it to a server.
+        </p>
+        <p>
+          A <code class="source-code">/track-section</code> route exists for lightweight session-based engagement experiments; it does not replace a full analytics policy — say so in your own deployment if you enable it broadly.
+        </p>
+      </section>
+
+      <section class="support-section" id="stack" aria-labelledby="stack-h">
+        <h2 id="stack-h">Technology stack</h2>
+        <dl class="tech-stack">
+          <div class="tech-stack-row">
+            <dt>Python · Flask</dt>
+            <dd>Server routes, Jinja templates, and JSON endpoints. SQLite via <code class="source-code">sqlite3</code> and Flask’s <code class="source-code">g</code> for per-request connections.</dd>
+          </div>
+          <div class="tech-stack-row">
+            <dt>Templates · Jinja2</dt>
+            <dd><code class="source-code">base.html</code> holds shared chrome; pages extend it and override {% raw %}<code class="source-code">{% block %}</code>{% endraw %} sections (for example <code class="source-code">content</code> and <code class="source-code">title</code>).</dd>
+          </div>
+          <div class="tech-stack-row">
+            <dt>Front-end</dt>
+            <dd>Semantic HTML, one stylesheet (<code class="source-code">styles.css</code>), and vanilla JavaScript (<code class="source-code">script.js</code>) for scroll progress, intersection observers, canvas charts, and the pledge UI.</dd>
+          </div>
+          <div class="tech-stack-row">
+            <dt>Fonts</dt>
+            <dd>Playfair Display, DM Sans, and DM Mono loaded from Google Fonts (see CSS <code class="source-code">@import</code>).</dd>
+          </div>
+          <div class="tech-stack-row">
+            <dt>Tooling &amp; AI</dt>
+            <dd>Editor and AI assistants may help with copy, refactors, and accessibility passes — human review remains responsible for accuracy and citations (see <a href="{{ url_for('sources') }}">Data &amp; sources</a>).</dd>
+          </div>
+        </dl>
+      </section>
+
+      <p class="support-page-foot">
+        <a href="{{ url_for('home') }}">← Back to home</a>
+        ·
+        <a href="{{ url_for('sources') }}">Data &amp; sources</a>
+      </p>
+    </div>
+  </div>
+</div>
 {% endblock %}
