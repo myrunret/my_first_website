@@ -1,24 +1,74 @@
 {% extends "base.html" %}
 
-{% block title %}Take action — Micro-acting{% endblock %}
+{% block title %}Take action — Micro-action{% endblock %}
 
 {% block content %}
-<div class="action-page">
-  <header class="action-page-hero" id="action-tips">
-    <div class="container container--narrow action-page-header">
-      <p class="hero-eyebrow action-eyebrow">What you can do</p>
-      <h1 class="action-page-title">Reduce plastic<br><em>in everyday life</em></h1>
-      <p class="action-page-lead">
-        Practical swaps and habits that lower your footprint and often your exposure too.
-      </p>
+<div class="page">
+  <section class="page-hero">
+    <div class="container container--narrow">
+      <div class="hero-content">
+      <h1 class="hero-title">Action starts with knowledge</h1>
+      <p class="hero-subtitle">The threat of microplastics is concerning. But what can you do?</p>
+      </div>
+      <div class="scroll-cue" aria-label="Scroll down">
+      <a href="#production"><i class="fa-solid fa-angles-down"></i></a>
+      </div>
     </div>
-  </header>
-
+  </section>
+<section class="fade-in-section" id="exposure">
+  <div class="container">
+    <h2>Routes of Exposure</h2>
+    <p class="section-intro">
+      Microplastics enter the body through every route imaginable:
+      what you drink, eat, breathe, and wear.
+    </p>
+    <div class="exposure-grid">
+      <div class="exposure-card">
+        <div class="exposure-icon"><i class="fa-solid fa-glass-water-droplet"></i></div>
+        <h3>Water</h3>
+        <div class="exposure-stat">81%</div>
+          <p>of tap water samples worldwide contain microplastic fibres</p>
+          <p class="source-tag">
+              <a href="https://doi.org/10.1371/journal.pone.0194970" target="_blank">Kosuth et al. (2018)</a>
+          </p>
+      </div>
+      <div class="exposure-card">
+        <div class="exposure-icon"><i class="fa-solid fa-shrimp"></i></div>
+        <h3>Food</h3>
+        <div class="exposure-stat">88%</div>
+          <p>of tested protein products (seafood, meat, plant-based) contain microplastics</p>
+          <p class="source-tag">
+              <a href="https://doi.org/10.1016/j.envpol.2023.123233" target="_blank">Milne et al. (2024)</a>
+          </p>
+      </div>
+      <div class="exposure-card">
+        <div class="exposure-icon"><i class="fa-solid fa-shirt"></i></div>
+        <h3>Clothing</h3>
+        <div class="exposure-stat">500-700K</div>
+        <p>microplastic particles are released from a single 6 kg domestic wash</p>
+        <p class="source-tag">
+                <a href="https://doi.org/10.1016/j.marpolbul.2016.09.025" target="_blank" rel="noopener noreferrer">Napper & Thompson (2016)</a>
+            </p>
+      </div>
+      <div class="exposure-card">
+        <div class="exposure-icon"><i class="fa-solid fa-smog"></i></div>
+        <h3>Air</h3>
+        <div class="exposure-stat">~71,000</div>
+          <p>estimated total of microplastics inhaled daily by a human adult indoors.</p>
+            <p class="source-tag">
+                <a href="https://doi.org/10.1371/journal.pone.0328011" target="_blank" rel="noopener noreferrer">Yakovenko et al. (2025)</a>
+            </p>
+      </div>
+    </div>
+  </div>
+  
+</section>
   <section class="fade-in-section action-tips-section">
     <div class="container">
       <h2>Start with one change</h2>
       <p class="section-intro">
-        You do not need to overhaul your life overnight. Pick one column that fits your routine, then add another when it sticks.
+        You do not need to overhaul your life overnight. Pick one column that fits your current lifestyle, then add another when it sticks.
+
       </p>
 
       <div class="action-grid">
@@ -56,7 +106,7 @@
     <div class="container container--narrow">
       <h2>Make it personal.</h2>
       <p class="pledge-intro">
-        Knowledge without action is just anxiety. After the ideas above, lock in one public commitment.
+        Awareness is always the first step. Time to commit to action.
       </p>
 
       <div class="pledge-box" id="pledgeBox">
@@ -83,10 +133,10 @@
           <p class="pledge-card-date" id="pledgeCardDate"></p>
         </div>
         <p class="pledge-counter">
-          You've joined <strong id="pledgeCount">—</strong> others who pledged.
+          You've joined <strong id="pledgeCount">{{ pledges }}</strong> others who pledged.
         </p>
-        <a href="#action-tips" class="btn-action">Review tips above ↑</a>
-        <a href="{{ url_for('home') }}" class="btn-action btn-action--ghost">Back to the story →</a>
+        <a href="#action-tips" class="btn-action">Review tips above â†‘</a>
+        <a href="{{ url_for('home') }}" class="btn-action btn-action--ghost">Back to the story</a>
       </div>
     </div>
   </section>

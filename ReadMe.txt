@@ -1,15 +1,3 @@
-# my_first_website
-My very first project in website design for the university. 
-In this project I will build an informative website about a chosen societal issue (related to climate change, surveillance, mobility, or public health), supported by publicly available datasets, and will communicate insight through text, numbers and visualizations. As part of this project, the relational database will be constructed. Moreover, I will implement user-tracking functionality and critically reflect on its purpose, use and ethical implications.
-The project is divided into 4 stages:
-1. Developing the website structure + connecting Python Flask [9.03 - 13.03]
-   Month in-between two stages to focus on data collection
-3. Selecting datasets and cleaning the data using Python or/and SQL, design and creation of a relational database + presenting the data on the website [13.04 - 17.04]
-4. Integrating user-tracking functionality [20.04 - 24.04]
-5. Polishing, improving documentation [9.05 - 13.05]
-In final version this ReadMe file will include a description of the website's purpose, its client- and server-side components, and how these are designed to interact. 
-
-
 The goal of this website is to turn scientific data on plastics and microplastics into 
 accessible explanations, so public understands where plastics and microplastics come from, 
 how they accumulate in the environment and human body, and how everyday choices can meaningfully reduce 
@@ -27,3 +15,6 @@ action guides for community-based interventions, and prevent misinformation by i
 The purpose of this website, therefore, is to contribute to bigger challenge of climate change 
 and inform people about potential health risks of plastic pollution on the rise of microplastic research.
 
+The website can be accessed via https://myrunret.eu.pythonanywhere.com/
+
+ChatGPT assisted with styling of the website, helped extensively with understanding how css layouts work and how to implement adaptability for the website. It was used for “debugging” purposes, when elements did not look the way I intended them to. The AI agent suggested fixes, which were reviewed, understood and implemented to the final code. Interactivity, such as drawing the pie chart quiz with JavaScript, was also implemented using an example from the ChatGPT model. Background image and favicon icon were as well generated with ChatGPT, which is mentioned on the website to transparently acknowledge the use of generative tools for visuals. 

@@ -3,17 +3,7 @@
 {% block title %}Contact — Micro-acting{% endblock %}
 
 {% block content %}
-<div class="support-page">
-  <header class="action-page-hero">
-    <div class="container container--narrow">
-      <p class="hero-eyebrow action-eyebrow">Reach out</p>
-      <h1 class="action-page-title">Contact</h1>
-      <p class="action-page-lead">
-        Questions about the data, the story, or this site — leave a message and we will read it.
-      </p>
-    </div>
-  </header>
-
+<div class="support-page page">
   <div class="support-page-body">
     <div class="container container--narrow">
       {% with messages = get_flashed_messages(with_categories=true) %}
@@ -25,6 +15,10 @@
           </div>
         {% endif %}
       {% endwith %}
+      <div class="hero-content">
+      <h1 class="hero-title">Contact us</h1>
+      <p class="hero-subtitle">We welcome your questions, feedback, and suggestions.</p>
+      </div>
 
       <form class="contact-form" method="post" action="{{ url_for('submitContact') }}">
         <div class="form-field">
@@ -39,14 +33,14 @@
 
         <div class="form-field">
           <label class="form-label" for="message">Message</label>
-          <textarea class="form-textarea" id="message" name="message" rows="5" required maxlength="8000" placeholder="Your question or feedback…"></textarea>
+          <textarea class="form-textarea" id="message" name="message" rows="5" required maxlength="8000" placeholder="Your question or feedback!"></textarea>
         </div>
 
         <button type="submit" class="btn-submit">Send message</button>
       </form>
 
       <p class="support-page-foot">
-        Prefer context first? Browse <a href="{{ url_for('sources') }}">Data &amp; sources</a> or
+        Prefer context first? Browse <a href="{{ url_for('sources') }}">Data & sources</a> or
         <a href="{{ url_for('tech') }}">Tech stack</a>.
       </p>
     </div>

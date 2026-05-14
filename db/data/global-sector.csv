@@ -1,0 +1,13 @@
+region_id,sector_id,value_percent,value_tonnes,year,source
+'WRL','PACK',31.0,142598990,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','B&C',16.7,76893000,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','OTH',14.4,66315004,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','TRANSP',13.5,62165000,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','CONS&IP',10.1,46662000,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','TXTL',9.5,43875000,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','ELEC',3.8,17305000,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','IND',0.6,2683000,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','RM',0.1,682000,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','MC',0.1,541000,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','PCP',0.0,27000,2019,'Ryberg et al. (2019); OECD (2022)'
+'WRL','TOTAL',100,459746994,2019,'Ryberg et al. (2019); OECD (2022)'

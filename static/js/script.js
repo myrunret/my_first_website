@@ -1,4 +1,3 @@
-// ── Progress Bar 
 (function () {
   const bar = document.getElementById('progressBar');
   if (!bar) return;
@@ -8,8 +7,35 @@
   }, { passive: true });
 })();
 
+// Anonymous engagement tracking
+(function () {
+  const endpoint = '/track-section';
 
-// ── Fade-in Sections 
+  window.trackEvent = function (eventType, target, metadata) {
+    if (!eventType || !target || !window.fetch) return;
+
+    try {
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        keepalive: true,
+        body: JSON.stringify({
+          event_type: eventType,
+          target: target,
+          page: window.location.pathname,
+          metadata: metadata || {}
+        })
+      }).catch(() => {});
+    } catch (err) {
+      // Analytics must never block the page experience.
+    }
+  };
+})();
+
+
+
+//Fade-in Sections 
 (function () {
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -17,212 +43,346 @@
 
   document.querySelectorAll('.fade-in-section').forEach(el => obs.observe(el));
 })();
-
-
-// ── In-page section nav (highlights current section)
+// Track section views once per page load
 (function () {
-  const nav = document.querySelector('.in-page-nav');
-  if (!nav) return;
+  if (!('IntersectionObserver' in window) || !window.trackEvent) return;
 
-  const links = [...nav.querySelectorAll('a[href^="#"]')];
-  if (!links.length) return;
-
-  const sections = links
-    .map(a => document.querySelector(a.getAttribute('href')))
-    .filter(Boolean);
-  if (!sections.length) return;
-
-  function pickActive() {
-    const marker = window.innerHeight * 0.22;
-    let active = sections[0];
-    for (const s of sections) {
-      if (s.getBoundingClientRect().top <= marker) active = s;
-    }
-    const id = active.id;
-    links.forEach(a => {
-      if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'true');
-      else a.removeAttribute('aria-current');
+  const seen = new Set();
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting || !entry.target.id || seen.has(entry.target.id)) return;
+      seen.add(entry.target.id);
+      window.trackEvent('section_view', entry.target.id, {
+        visible_ratio: Number(entry.intersectionRatio.toFixed(2))
+      });
     });
-  }
+  }, { threshold: 0.45 });
 
-  window.addEventListener('scroll', pickActive, { passive: true });
-  window.addEventListener('resize', pickActive, { passive: true });
-  pickActive();
+  document.querySelectorAll('main section[id], header[id]').forEach(el => obs.observe(el));
 })();
 
 
-// ── Size Comparison Slider
+
+
+// Human health organ selector
 (function () {
-  const slider = document.getElementById('sizeRange');
-  if (!slider) return;
+  const explorer = document.querySelector('[data-health-explorer]');
+  if (!explorer) return;
 
-  const stages = document.querySelectorAll('.size-stage');
+  const buttons = [...explorer.querySelectorAll('.organ-option')];
+  const panel = document.getElementById('organ-detail-panel');
+  const title = document.getElementById('organPanelTitle');
+  const year = document.getElementById('organPanelYear');
+  const evidence = document.getElementById('organPanelEvidence');
+  const detected = document.getElementById('organPanelDetected');
+  const suggests = document.getElementById('organPanelSuggests');
+  const caveat = document.getElementById('organPanelCaveat');
 
-  function update() {
-    const idx = parseInt(slider.value);
-    stages.forEach((s, i) => s.classList.toggle('active', i === idx));
+  if (!buttons.length || !panel || !title || !year || !evidence || !detected || !suggests || !caveat) return;
+
+  function selectOrgan(button, shouldTrack) {
+    buttons.forEach(btn => {
+      const active = btn === button;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+      btn.tabIndex = active ? 0 : -1;
+    });
+
+    panel.setAttribute('aria-labelledby', button.id);
+    title.textContent = button.dataset.title;
+    year.textContent = button.dataset.year;
+    evidence.textContent = button.dataset.evidence;
+    detected.textContent = button.dataset.detected;
+    suggests.textContent = button.dataset.suggests;
+    caveat.textContent = button.dataset.caveat;
+
+    if (shouldTrack && window.trackEvent) {
+      window.trackEvent('organ_select', button.dataset.organ, {
+        title: button.dataset.title,
+        evidence: button.dataset.evidence
+      });
+    }
   }
 
-  slider.addEventListener('input', update);
-  update();
+  buttons.forEach((button, index) => {
+    button.tabIndex = button.classList.contains('active') ? 0 : -1;
+
+    button.addEventListener('click', () => selectOrgan(button, true));
+    button.addEventListener('keydown', event => {
+      const current = buttons.indexOf(button);
+      let next = current;
+
+      if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (current + 1) % buttons.length;
+      else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (current - 1 + buttons.length) % buttons.length;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = buttons.length - 1;
+      else return;
+
+      event.preventDefault();
+      buttons[next].focus();
+      selectOrgan(buttons[next], true);
+    });
+  });
+
+  selectOrgan(buttons.find(btn => btn.classList.contains('active')) || buttons[0], false);
 })();
 
-
-// ── Recycling Pie Chart Guesser 
+// Consequence evidence selector
 (function () {
-  const canvas  = document.getElementById('recyclingChart');
-  if (!canvas) return;
+  const explorer = document.querySelector('[data-risk-explorer]');
+  if (!explorer) return;
 
-  const ctx     = canvas.getContext('2d');
-  const slider  = document.getElementById('recyclingSlider');
-  const display = document.getElementById('guessValue');
-  const btn     = document.getElementById('recyclingRevealBtn');
-  const panel   = document.getElementById('revealPanel');
-  const center  = document.getElementById('chartCenterLabel');
+  const tabs = [...explorer.querySelectorAll('.risk-tab')];
+  const panel = document.getElementById('risk-detail-panel');
+  const title = document.getElementById('riskPanelTitle');
+  const strength = document.getElementById('riskPanelStrength');
+  const source = document.getElementById('riskPanelSource');
+  const main = document.getElementById('riskPanelMain');
+  const detail = document.getElementById('riskPanelDetail');
 
-  // Canvas is 240×240
-  const W = canvas.width, H = canvas.height;
-  const cx = W / 2, cy = H / 2;
-  const R = W * 0.44;   // outer radius
-  const r = W * 0.26;   // inner (donut hole)
+  if (!tabs.length || !panel || !title || !strength || !source || !main || !detail) return;
 
-  const COL = {
-    guess:    '#00d4ff',
-    rest:     'rgba(0,212,255,0.07)',
-    recycled: '#00ffcc',
-    burn:     '#ff9820',
-    landfill: '#162840',
-  };
+  function selectRisk(tab, shouldTrack) {
+    tabs.forEach(item => {
+      const active = item === tab;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-selected', active ? 'true' : 'false');
+      item.tabIndex = active ? 0 : -1;
+    });
 
-  let revealed = false;
+    panel.setAttribute('aria-labelledby', tab.id);
+    title.textContent = tab.dataset.title;
+    strength.textContent = tab.dataset.strength;
+    source.textContent = tab.dataset.source;
+    main.textContent = tab.dataset.main;
+    detail.textContent = tab.dataset.detail;
 
-  function drawArc(startDeg, endDeg, color) {
-    const s = (startDeg - 90) * Math.PI / 180;
-    const e = (endDeg   - 90) * Math.PI / 180;
+    if (shouldTrack && window.trackEvent) {
+      window.trackEvent('risk_select', tab.dataset.risk, {
+        title: tab.dataset.title,
+        strength: tab.dataset.strength
+      });
+    }
+  }
+
+  tabs.forEach(tab => {
+    tab.tabIndex = tab.classList.contains('active') ? 0 : -1;
+
+    tab.addEventListener('click', () => selectRisk(tab, true));
+    tab.addEventListener('keydown', event => {
+      const current = tabs.indexOf(tab);
+      let next = current;
+
+      if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (current + 1) % tabs.length;
+      else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = tabs.length - 1;
+      else return;
+
+      event.preventDefault();
+      tabs[next].focus();
+      selectRisk(tabs[next], true);
+    });
+  });
+
+  selectRisk(tabs.find(tab => tab.classList.contains('active')) || tabs[0], false);
+})();
+
+// Recycling quiz interaction
+(function () {
+  const guessValue = document.getElementById('guessValue');
+  const revealBtn = document.getElementById('recyclingRevealBtn');
+  const revealPanel = document.getElementById('revealPanel');
+  const chart = document.getElementById('recyclingChart');
+  const centerLabel = document.getElementById('chartCenterLabel');
+
+  if (!guessValue || !revealBtn || !revealPanel || !chart || !centerLabel) return;
+
+  const ctx = chart.getContext('2d');
+  const fateSegments = [
+    { label: 'Recycled', value: 9.3, color: 'rgba(0,255,204,0.95)' },
+    { label: 'Incinerated', value: 19, color: 'rgba(255,193,7,0.95)' },
+    { label: 'Mismanaged', value: 22.5, color: 'rgba(255,99,71,0.95)' },
+    { label: 'Landfilled', value: 49.2, color: 'rgba(255,140,0,0.95)' }
+  ];
+  const actualPercent = fateSegments[0].value;
+  const lineWidth = 25;
+  let isDragging = false;
+  let guessPercent = 50;
+
+  function drawChart(showAnswer) {
+    const width = chart.width;
+    const height = chart.height;
+    const radius = Math.min(width, height) / 2 - lineWidth;
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    ctx.clearRect(0, 0, width, height);
+    ctx.lineCap = 'round';
+
+    // Base ring
     ctx.beginPath();
-    ctx.moveTo(cx + r * Math.cos(s), cy + r * Math.sin(s));
-    ctx.arc(cx, cy, R, s, e);
-    ctx.arc(cx, cy, r, e, s, true);
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
-  }
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = lineWidth;
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.stroke();
 
-  function drawGuess(pct) {
-    ctx.clearRect(0, 0, W, H);
-    const deg = pct * 3.6;
-    drawArc(0, deg, COL.guess);
-    drawArc(deg, 360, COL.rest);
-  }
+    if (showAnswer) {
+      let startAngle = -Math.PI / 2;
+      fateSegments.forEach(segment => {
+        const endAngle = startAngle + (segment.value / 100) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.strokeStyle = segment.color;
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.stroke();
+        startAngle = endAngle;
+      });
+      centerLabel.classList.remove("animate");
+      void centerLabel.offsetWidth;
+      centerLabel.textContent = `${actualPercent}%`;
+      centerLabel.classList.add("animate");
+    } else {
+      const endAngle = (-Math.PI / 2) + (guessPercent / 100) * Math.PI * 2;
 
-  function drawRevealed(progress) {
-    const p = Math.min(progress, 1);
-    ctx.clearRect(0, 0, W, H);
-    const R_DEG  = 9  * 3.6 * p;
-    const B_DEG  = 12 * 3.6 * p;
-    const L_DEG  = 79 * 3.6 * p;
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(0,212,255,0.5)';
+      ctx.arc(centerX, centerY, radius, -Math.PI / 2, endAngle);
+      ctx.stroke();
 
-    drawArc(0,               R_DEG,                    COL.recycled);
-    drawArc(R_DEG,           R_DEG + B_DEG,            COL.burn);
-    drawArc(R_DEG + B_DEG,   R_DEG + B_DEG + L_DEG,   COL.landfill);
+      const pointerX = centerX + Math.cos(endAngle) * radius;
+      const pointerY = centerY + Math.sin(endAngle) * radius;
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(0,212,255,1)';
+      ctx.arc(pointerX, pointerY, 7, 0, Math.PI * 2);
+      ctx.fill();
 
-    if (p < 1) {
-      drawArc(360 * p, 360, COL.rest);
+      centerLabel.textContent = '?';
     }
   }
 
-  // Initial state
-  drawGuess(50);
+  function updateGuess() {
+    guessValue.textContent = guessPercent;
+    if (!revealPanel.classList.contains('shown')) {
+      drawChart(false);
+    }
+  }
 
-  slider.addEventListener('input', () => {
-    if (revealed) return;
-    const v = parseInt(slider.value);
-    display.textContent = v;
-    drawGuess(v);
+  function pointerEventToPercent(event) {
+    const rect = chart.getBoundingClientRect();
+    const x = event.clientX - rect.left - rect.width / 2;
+    const y = event.clientY - rect.top - rect.height / 2;
+    let angle = Math.atan2(y, x);
+    angle = angle < -Math.PI / 2 ? angle + Math.PI * 2 : angle;
+    const percent = ((angle + Math.PI / 2) / (Math.PI * 2)) * 100;
+    return Math.min(100, Math.max(1, Math.round(percent)));
+  }
+
+  function setGuessFromPointer(event) {
+    guessPercent = pointerEventToPercent(event);
+    updateGuess();
+  }
+
+  chart.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    isDragging = true;
+    chart.setPointerCapture(event.pointerId);
+    setGuessFromPointer(event);
   });
 
-  btn.addEventListener('click', () => {
-    if (revealed) return;
-    revealed = true;
-    btn.disabled = true;
-    btn.textContent = '↓ See the breakdown below';
-    center.textContent = '9%';
-    center.classList.add('revealed');
+  chart.addEventListener('pointermove', event => {
+    if (!isDragging) return;
+    setGuessFromPointer(event);
+  });
 
-    const dur = 1300;
-    const t0  = performance.now();
+  chart.addEventListener('pointerup', event => {
+    if (!isDragging) return;
+    isDragging = false;
+    chart.releasePointerCapture(event.pointerId);
+  });
 
-    (function tick(now) {
-      const raw    = (now - t0) / dur;
-      const eased  = 1 - Math.pow(1 - Math.min(raw, 1), 3);
-      drawRevealed(eased);
-      if (raw < 1) requestAnimationFrame(tick);
-      else {
-        drawRevealed(1);
-        panel.classList.add('shown');
-        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  chart.addEventListener('pointerleave', () => {
+    isDragging = false;
+  });
+
+  chart.addEventListener('pointercancel', () => {
+    isDragging = false;
+  });
+
+  chart.addEventListener('click', setGuessFromPointer);
+
+  function animateReveal() {
+    const duration = 1000;
+    let startTime = null;
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      let drawProgress = progress;
+
+      const width = chart.width;
+      const height = chart.height;
+      const radius = Math.min(width, height) / 2 - lineWidth;
+      const centerX = width / 2;
+      const centerY = height / 2;
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.lineCap = 'round';
+
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = lineWidth;
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      const fullAngle = Math.PI * 2 * drawProgress;
+      let startAngle = -Math.PI / 2;
+      let remaining = fullAngle;
+
+      fateSegments.forEach(segment => {
+        const segmentAngle = (segment.value / 100) * Math.PI * 2;
+        const drawAngle = Math.min(segmentAngle, remaining);
+        if (drawAngle > 0) {
+          ctx.beginPath();
+          ctx.strokeStyle = segment.color;
+          ctx.arc(centerX, centerY, radius, startAngle, startAngle + drawAngle);
+          ctx.stroke();
+          remaining -= drawAngle;
+        }
+        startAngle += segmentAngle;
+      });
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        drawChart(true);
       }
-    })(t0);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  revealBtn.addEventListener('click', () => {
+    revealPanel.classList.add('shown');
+    animateReveal();
+    revealBtn.disabled = true;
+    // Track recycling quiz reveal
+    if (window.trackEvent) {
+      window.trackEvent('quiz_reveal', 'recycling_quiz', {
+        user_guess: guessPercent,
+        actual_answer: actualPercent,
+        accuracy_difference: Math.abs(guessPercent - actualPercent)
+      });
+    }
   });
+
+  window.addEventListener('resize', () => drawChart(revealPanel.classList.contains('shown')));
+
+  updateGuess();
+  drawChart(false);
 })();
 
-
-// ── Production Scroll Timeline 
-(function () {
-  const yearEl  = document.getElementById('timelineYear');
-  const valEl   = document.getElementById('timelineValue');
-  const barFill = document.getElementById('timelineBarFill');
-  const section = document.getElementById('production');
-  const ticks   = document.querySelectorAll('.tick-item');
-
-  if (!yearEl || !section || typeof window.plasticData === 'undefined') return;
-
-  const data   = window.plasticData;
-  const minVal = data[0].value;
-  const maxVal = data[data.length - 1].value;
-
-  function fmt(n) {
-    if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
-    if (n >= 1_000_000)     return Math.round(n / 1_000_000) + 'M';
-    if (n >= 1_000)         return Math.round(n / 1_000) + 'K';
-    return n.toLocaleString();
-  }
-
-  let lastIdx = -1;
-
-  function update() {
-    const rect    = section.getBoundingClientRect();
-    const visible = -rect.top / (rect.height - window.innerHeight);
-    const scrolled = Math.max(0, Math.min(1, visible));
-    const idx     = Math.min(Math.floor(scrolled * (data.length - 1)), data.length - 1);
-
-    if (idx === lastIdx) return;
-    lastIdx = idx;
-
-    const entry  = data[idx];
-    const barPct = ((entry.value - minVal) / (maxVal - minVal)) * 100;
-
-    yearEl.textContent  = entry.year;
-    valEl.textContent   = fmt(entry.value);
-    barFill.style.width = barPct + '%';
-
-    // Shift year colour cyan → red with production growth
-    const hue = Math.round(180 - (barPct / 100) * 180);
-    yearEl.style.color = `hsl(${hue}, 100%, 65%)`;
-
-    ticks.forEach(t => {
-      const y = parseInt(t.dataset.year);
-      t.classList.toggle('active', y === entry.year);
-      t.classList.toggle('past',   y <  entry.year);
-    });
-  }
-
-  window.addEventListener('scroll', update, { passive: true });
-  update();
-})();
-
-
-// ── Pledge ───────────────────────────────────────────────────────
+// Pledge form interaction
 (function () {
   const input   = document.getElementById('pledgeName');
   const btn     = document.getElementById('pledgeBtn');
@@ -248,12 +408,22 @@
     const name = input.value.trim();
     if (!name) return;
 
-    // Persist locally
-    const pledges = JSON.parse(localStorage.getItem('microacting_pledges') || '[]');
-    if (!pledges.includes(name.toLowerCase())) {
-      pledges.push(name.toLowerCase());
-      localStorage.setItem('microacting_pledges', JSON.stringify(pledges));
+    if (window.fetch) {
+      fetch('/submit-pledge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ name })
+      })
+        .then(response => response.ok ? response.json() : null)
+        .then(data => {
+          if (data && typeof data.pledges !== 'undefined' && counter) {
+            counter.textContent = data.pledges;
+          }
+        })
+        .catch(() => {});
     }
+
 
     // Show card
     nameOut.textContent = name;
@@ -261,13 +431,19 @@
       day: 'numeric', month: 'long', year: 'numeric'
     });
 
-    // Fake community counter (replace with real API if you build one)
-    const seed    = pledges.length + 1247;
-    counter.textContent = seed.toLocaleString();
-
     // Swap panels
     box.style.display = 'none';
     success.classList.add('shown');
     success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
+})();
+
+// Contact form interaction tracking
+(function () {
+  const form = document.querySelector('.contact-form');
+  if (!form) return;
+
+  let formInteraction = false;
+  const inputs = form.querySelectorAll('input, textarea');
+
 })();

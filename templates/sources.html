@@ -1,35 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}Data &amp; sources — Micro-acting{% endblock %}
+{% block title %}Data — Micro-action{% endblock %}
 
 {% block content %}
-<div class="support-page">
-  <header class="action-page-hero">
+<div class="support-page page">
+  <section class="page-hero">
     <div class="container container--narrow">
-      <p class="hero-eyebrow action-eyebrow">Transparency</p>
-      <h1 class="action-page-title">Data &amp; sources</h1>
-      <p class="action-page-lead">
-        Charts and copy on the home page are grounded in public datasets and peer-reviewed literature.
-        Follow the links for full methods and caveats.
-      </p>
+    <div class="hero-content">
+      <h1 class="hero-title">Data sources</h1>
+      <p class="hero-subtitle">All data displayed on this website is grounded in academic peer-reviewed literature and official datasets.</p>
     </div>
-  </header>
-
+    <div class="scroll-cue" aria-label="Scroll down">
+      <a href="#production"><i class="fa-solid fa-angles-down"></i></a>
+    </div>
+  </section>
   <div class="support-page-body">
     <div class="container container--narrow">
       <section class="support-section" aria-labelledby="src-production">
-        <h2 id="src-production">Plastic production &amp; fate</h2>
-        <p class="support-lead">Global production figures and the recycling quiz on the home page.</p>
+        <h2 id="src-production">Plastic production & fate</h2>
         <ul class="source-list">
           <li class="source-item">
-            <strong>Annual production &amp; growth</strong> — values shown in the production section come from the site’s
-            SQLite database (<code class="source-code">db/plastic_database.db</code>), derived from public production series.
+            <strong>Annual production & growth</strong> values shown in the production section come from the site's
+            SQLite database, derived from public production datasets.
             Cross-check trends with
-            <a href="https://ourworldindata.org/grapher/global-plastics-production" target="_blank" rel="noopener noreferrer">Our World in Data — global plastics production</a>.
+            <a href="https://ourworldindata.org/grapher/global-plastics-production" target="_blank" rel="noopener noreferrer">Our World in Data global plastics production</a>.
           </li>
           <li class="source-item">
-            <strong>Share recycled / incinerated / discarded</strong> — the 9% / 12% / 79% split used in the reveal panel follows
-            <a href="https://ourworldindata.org/grapher/share-plastic-fate" target="_blank" rel="noopener noreferrer">Our World in Data — share of plastic fate</a>.
+            <strong>Share of plastic waste by disposal method</strong> used in the recycling quiz follows
+            <a href="https://ourworldindata.org/grapher/share-plastic-fate" target="_blank" rel="noopener noreferrer">Our World in Data share of plastic fate</a>.
           </li>
         </ul>
       </section>
@@ -38,7 +36,7 @@
         <h2 id="src-micro">Microplastics overview</h2>
         <ul class="source-list">
           <li class="source-item">
-            Thompson, R. C. et al. “Twenty years of microplastic pollution research—what have we learned?”
+            Thompson, R. C. et al. Twenty years of microplastic pollution research what have we learned?
             <em>Science</em> 386, eadl2746 (2024).
             <a href="https://www.science.org/doi/10.1126/science.adl2746" target="_blank" rel="noopener noreferrer">DOI:10.1126/science.adl2746</a>
           </li>
@@ -46,34 +44,28 @@
       </section>
 
       <section class="support-section" aria-labelledby="src-health">
-        <h2 id="src-health">Human health &amp; tissue findings</h2>
+        <h2 id="src-health">Human health & tissue findings</h2>
         <ul class="source-list">
           <li class="source-item">
-            Nihart, A. J., Garcia, M. A., El Hayek, E. et al. “Bioaccumulation of microplastics in decedent human brains.”
-            <em>Nature Medicine</em> 31, 1114–1119 (2025).
+            Nihart, A. J., Garcia, M. A., El Hayek, E. et al. â€œBioaccumulation of microplastics in decedent human brains.
+            <em>Nature Medicine</em> 31, 11141119 (2025).
             <a href="https://doi.org/10.1038/s41591-024-03453-1" target="_blank" rel="noopener noreferrer">https://doi.org/10.1038/s41591-024-03453-1</a>
+          </li>
+          <li class="source-item">
+            Systematic reviews and biomonitoring papers used for the health selector include evidence on blood, lung, placenta,
+            feces, liver, heart, and brain detection, with repeated caveats about inconsistent sampling methods and limited causal evidence.
+          </li>
+          <li class="source-item">
+            Additional reading:
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12848325/" target="_blank" rel="noopener noreferrer">Impact of Microplastic Exposure on Human Health</a>,
+            <a href="https://www.mdpi.com/2075-4418/15/23/2971" target="_blank" rel="noopener noreferrer">Tracing Microplastics in the Human Body</a>, and
+            <a href="https://www.mdpi.com/2076-3417/15/22/12289" target="_blank" rel="noopener noreferrer">Microplastics in Humans</a>.
           </li>
         </ul>
         <p class="support-note">
           Organ-level years on the story page are illustrative entry points into the literature, not an exhaustive review.
         </p>
       </section>
-
-      <section class="support-section" aria-labelledby="src-action">
-        <h2 id="src-action">Behaviour change &amp; guidance</h2>
-        <p class="support-lead">Practical lists on the action page are editorial guidance, not medical advice.</p>
-        <ul class="source-list">
-          <li class="source-item">
-            For structured steps you can take today, see <a href="{{ url_for('action') }}">Take action</a>.
-          </li>
-          <li class="source-item">
-            Broader policy and waste context:
-            <a href="https://www.unep.org/resources/report/single-use-plastics-future" target="_blank" rel="noopener noreferrer">UNEP — single-use plastics</a>
-            (external overview).
-          </li>
-        </ul>
-      </section>
-
       <p class="support-page-foot">
         Something missing? <a href="{{ url_for('contact') }}">Send a note via Contact</a> and we can extend this list.
       </p>
